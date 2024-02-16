@@ -1,12 +1,11 @@
-let purple;
-let roundGirl;
-let yellow;
 
+let sprite;
+let characters = [];
 
 
 
 function preload() {
-  //------------------PURPLE------------------------------
+
   let animations = {
     stand: { row: 0, frames: 1},
     walkRight: {row: 0, col: 1, frames: 8},
@@ -14,8 +13,9 @@ function preload() {
     walkDown: {row: 5, col: 6, frames: 6}
   };
 
- let character = new Character (100, 100, 80, 80, 'assets/Purple.png', animations);
- 
+ characters.push(new Character (random(25, 375), random(25, 375), 80, 80, 'assets/RoundGirl.png', animations));
+ characters.push(new Character (random(25, 375), random(25, 375), 80, 80, 'assets/Purple.png', animations));
+ characters.push(new Character (random(25, 375), random(25, 375), 80, 80, 'assets/Yellow.png', animations));
 
 }
 
@@ -27,29 +27,33 @@ function setup() {
 function draw() {
   background(0);
 
-  if (kb.pressing('d')) {
-    walkRight();
+characters.forEach((character) => {
+  if (kb.pressing('arrowRight')) {
+    character.walkRight();
   }
-  else if (kb.pressing('a')) {
-    walkLeft();
+  else if (kb.pressing('arrowLeft')) {
+    character.walkLeft();
   } 
-  else if (kb.pressing('w')) { 
-    walkUp();
+  else if (kb.pressing('arrowUp')) { 
+    character.walkUp();
   } 
-  else if (kb.pressing('s')) {
-    walkDown();
+  else if (kb.pressing('arrowDown')) {
+    character.walkDown();
   } 
   else {
-    stop();
+    character.stop();
   }
+
+  if (character.sprite.x + character.sprite.width/4 > width) {
+    character.walkLeft();
+} else if (character.sprite.x - character.sprite.width/4 < 0) {
+    character.walkRight();
+} 
+
+})
+ 
   
-  if (purple.x + purple.width/4 > width) {
-    purple.vel.x = -1;
-    purple.scale.x = -1;
-  } else if (purple.x - purple.width/4 < 0) {
-    purple.vel.x = 1;
-    purple.scale.x = 1;
-  }
+
 
 
   }
@@ -61,51 +65,57 @@ function draw() {
 
       this.sprite.anis.frameDelay = 7;
       this.sprite.addAnis(animations);
+      this.sprite.changeAni('stand');
+      this.sprite.collider = 'none';
     }
+
+    stop () {
+      this.sprite.vel.x = 0;
+      this.sprite.vel.y = 0;
+      this.sprite.changeAni('stand');
+    
+    
+    }
+    
+     walkRight () {
+      this.sprite.changeAni('walkRight');
+      this.sprite.vel.x = 1;
+      this.sprite.scale.x = 1;
+      this.sprite.vel.y = 0;
+    
+      
+    }
+    
+     walkLeft () {
+      this.sprite.changeAni('walkRight');
+      this.sprite.vel.x = -1;
+      this.sprite.scale.x = -1;
+      this.sprite.vel.y = 0;
+    
+     
+    }
+    
+     walkUp () {
+      this.sprite.changeAni('walkUp');
+      this.sprite.vel.y = -1;
+      this.sprite.vel.x = 0;
+    
+      
+    }
+    
+     walkDown () {
+      this.sprite.changeAni('walkDown');
+      this.sprite.vel.y = 1;
+      this.sprite.vel.x = 0;
+    
+    
+    }
+
+
   }
 
 
-function stop () {
-  sprite.vel.x = 0;
-  sprite.vel.y = 0;
-  sprite.changeAni('stand');
 
-
-}
-
-function walkRight () {
-  sprite.changeAni('walkRight');
-  sprite.vel.x = 1;
-  sprite.scale.x = 1;
-  sprite.vel.y = 0;
-
-  
-}
-
-function walkLeft () {
-  sprite.changeAni('walkRight');
-  sprite.vel.x = -1;
-  sprite.scale.x = -1;
-  sprite.vel.y = 0;
-
- 
-}
-
-function walkUp () {
-  sprite.changeAni('walkUp');
-  sprite.vel.y = -1;
-  sprite.vel.x = 0;
-
-  
-}
-
-function walkDown () {
-  sprite.changeAni('walkDown');
-  sprite.vel.y = 1;
-  sprite.vel.x = 0;
-
-
-}
 
 function keyTypedOld() {
   switch(key) {
